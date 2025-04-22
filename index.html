@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WiFi Networks</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      padding: 30px;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00796b;
+    }
+
+    .wifi-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .wifi-item {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .wifi-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .ssid {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .signal {
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 4px;
+    }
+
+    .signal-bar {
+      width: 80px;
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background-color: #4caf50;
+      transition: width 0.3s ease;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #00796b;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+  </style>
+</head>
+<body>
+    <h2>📶 Available WiFi Networks</h2>
+  <ul id="wifi-list" class="wifi-list"></ul>
+
+<script>
+  const { ipcRenderer } = require('electron');
+
+  ipcRenderer.on('wifi-data', (event, networks) => {
+    const list = document.getElementById('wifi-list');
+    list.innerHTML = ''; // Clear previous items
+    networks.forEach((net) => {
+      const ssid = net.ssid || '(Hidden Network)';
+      const signal = parseFloat(net.signal_level || -100);
+      const signalPercent = Math.max(0, Math.min(100, (signal + 100)));
+
+      const item = document.createElement('li');
+      item.className = 'wifi-item';
+
+      item.innerHTML = `
+        <div>
+          <div class="ssid">${ssid}</div>
+          <div class="signal">Signal: ${signal.toFixed(1)}</div>
+          <div class="signal-bar">
+            <div class="bar-fill" style="width: ${signalPercent}%; background-color: ${
+              signalPercent > 70 ? '#4caf50' : signalPercent > 40 ? '#ffb300' : '#f44336'
+            };"></div>
+          </div>
+        </div>
+        <button onclick="connectTo('${ssid}')">Connect</button>
+      `;
+
+      list.appendChild(item);
+    });
+  });
+
+  function connectTo(ssid) {
+    const password = prompt(`🔐 Enter password for "${ssid}":`);
+    if (password !== null) {
+      ipcRenderer.send('connect-to-wifi', { ssid, password });
+    }
+  }
+
+  ipcRenderer.on('connection-result', (event, result) => {
+    if (result.success) {
+      alert("✅ Connected successfully!");
+    } else {
+      alert("❌ Failed to connect: " + result.error);
+    }
+  });
+</script>
+
+</body>
+</html>
