@@ -4,13 +4,13 @@
 
 ---
 
-## 🚀 Features
+## Features
 
-- 📡 Scans and displays nearby WiFi networks
-- 🔒 Auto-connects to known networks with saved credentials
-- 🔁 Refreshes WiFi list every 2 minutes automatically
-- 🖥️ Simple and user-friendly Electron-based UI
-- 🛠️ Works on Windows, Linux, and macOS (cross-platform)
+- Scans and displays nearby WiFi networks
+- Auto-connects to known networks with saved credentials
+- Refreshes WiFi list every 2 minutes automatically
+- Simple and user-friendly Electron-based UI
+- Works on Windows, Linux, and macOS (cross-platform)
 
 ---
 
