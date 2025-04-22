@@ -1,4 +1,4 @@
-# 📶 WiFi Switcher
+# Optimizing Device Connectivity with Automatic Wi-Fi Transitioning
 
 **WiFi Switcher** is a lightweight cross-platform desktop application that scans available WiFi networks and auto-connects to the best known network based on signal strength. It refreshes the network list every 2 minutes, ensuring seamless connectivity.
 
